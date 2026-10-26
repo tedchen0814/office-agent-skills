@@ -1,4 +1,4 @@
-# work-slide-skills one-step installer (Windows PowerShell 5.1+ / PowerShell 7)
+# office-agent-skills one-step installer (Windows PowerShell 5.1+ / PowerShell 7)
 #
 # Installs these skills into the agent's skills folder:
 #   html-slide-builder   Reveal.js HTML deck + AI backgrounds/icons + Firebase poll/word cloud + GitHub Pages
@@ -10,7 +10,7 @@
 # and the Python / npm packages they need. It never installs or stores an OpenAI key.
 #
 # Usage (from a clone):   powershell -ExecutionPolicy Bypass -File .\install.ps1 [options]
-# Usage (no clone):       & ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.ps1))) [options]
+# Usage (no clone):       & ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.ps1))) [options]
 #
 # Options:
 #   -Agent claude|codex|both    claude -> ~\.claude\skills (default); codex -> ~\.agents\skills
@@ -32,7 +32,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$RepoUrl    = "https://github.com/tedchen0814/work-slide-skills.git"
+$RepoUrl    = "https://github.com/tedchen0814/office-agent-skills.git"
 $Skills     = @("html-slide-builder", "soil-html-deck", "soil-image-deck", "soil-teaching-deck", "draw", "file-toolkit")
 $PyPackages = @("openai", "pillow", "python-pptx", "python-docx", "openpyxl", "pypdf", "reportlab", "pymupdf", "qrcode[pil]", "markitdown[pdf,docx,pptx,xlsx]")
 $PptxGenJs  = "pptxgenjs@3.12.0"
@@ -114,18 +114,18 @@ if ($CheckOnly) {
 }
 
 # ---------------------------------------------------------------- 3. get the repo
-$work = Join-Path ([IO.Path]::GetTempPath()) ("work-slide-skills-" + [Guid]::NewGuid().ToString("N").Substring(0, 8))
+$work = Join-Path ([IO.Path]::GetTempPath()) ("office-agent-skills-" + [Guid]::NewGuid().ToString("N").Substring(0, 8))
 New-Item -ItemType Directory -Force -Path $work | Out-Null
 # Backups go OUTSIDE the skills folder, or the agent would load two copies of a skill.
 $backupRoot = Join-Path $HOME (".claude\skill-backups\" + (Get-Date -Format "yyyyMMdd-HHmmss"))
 
 try {
-  Say "Getting work-slide-skills"
+  Say "Getting office-agent-skills"
   if ($PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot "skills\html-slide-builder\SKILL.md"))) {
     $repo = $PSScriptRoot
     Ok "using local copy: $repo"
   } else {
-    $repo = Join-Path $work "work-slide-skills"
+    $repo = Join-Path $work "office-agent-skills"
     & git -c core.longpaths=true clone --quiet --depth 1 $RepoUrl $repo
     if ($LASTEXITCODE -ne 0) { throw "git clone $RepoUrl failed" }
     Ok "cloned $RepoUrl"

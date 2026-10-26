@@ -1,6 +1,6 @@
-# Installing work-slide-skills — instructions for AI agents
+# Installing office-agent-skills — instructions for AI agents
 
-Follow these steps when the user asks you to install this repo (for example: "install this skill: https://github.com/tedchen0814/work-slide-skills"). Talk to the user in their language (Traditional Chinese if they wrote in Chinese).
+Follow these steps when the user asks you to install this repo (for example: "install this skill: https://github.com/tedchen0814/office-agent-skills"). Talk to the user in their language (Traditional Chinese if they wrote in Chinese).
 
 ## What gets installed
 
@@ -17,11 +17,11 @@ Existing skills with the same names are moved to `~/.claude/skill-backups/<times
 2. **Check first, change nothing.**
    - Windows (PowerShell):
      ```powershell
-     & ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.ps1))) -CheckOnly
+     & ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.ps1))) -CheckOnly
      ```
    - macOS / Linux:
      ```bash
-     curl -fsSL https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.sh | bash -s -- --check-only
+     curl -fsSL https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.sh | bash -s -- --check-only
      ```
 
 3. **Missing prerequisites?** Git and Python 3.9+ are required; Node.js 22+ and GitHub CLI are optional (see README for what each unlocks). Installing system software needs the user's OK. On Windows, with their OK, rerun with `-InstallPrereqs` (winget). On macOS/Linux give them the `brew` / `apt-get` command the script prints.

@@ -1,4 +1,4 @@
-# work-slide-skills
+# office-agent-skills
 
 把「工作簡報」變成 AI agent 一句話就能做的技能包：互動 HTML 簡報、可編輯 PPTX、整頁 AI 圖簡報，加上它們共用的生圖工具，以及 Word／Excel／PDF 批次處理手冊。給 Claude Code（或 Codex）使用，一鍵安裝。
 
@@ -20,7 +20,7 @@
 最簡單：把下面這句話貼給你的 AI agent。
 
 ```text
-請幫我安裝這個 skill：https://github.com/tedchen0814/work-slide-skills
+請幫我安裝這個 skill：https://github.com/tedchen0814/office-agent-skills
 ```
 
 agent 會讀 [AGENT_INSTALL.md](AGENT_INSTALL.md) 自己完成。也可以手動：
@@ -28,13 +28,13 @@ agent 會讀 [AGENT_INSTALL.md](AGENT_INSTALL.md) 自己完成。也可以手動
 **Windows（PowerShell）**
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.ps1)))
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.ps1)))
 ```
 
 **macOS / Linux**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.sh | bash
 ```
 
 常用選項：`-Agent codex`（`--agent codex`）裝到 Codex；`-CheckOnly`（`--check-only`）只檢查不改動；`-InstallPrereqs` 用 winget 補裝 Git、Python；`-FirebaseConfigFile`（`--firebase-config`）直接帶入你的 Firebase 設定（見下）。

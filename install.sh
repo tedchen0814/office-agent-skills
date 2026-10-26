@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# work-slide-skills one-step installer (macOS / Linux / Git Bash)
+# office-agent-skills one-step installer (macOS / Linux / Git Bash)
 #
 # Installs html-slide-builder, soil-html-deck, soil-image-deck, soil-teaching-deck, draw and file-toolkit
 # into the agent's skills folder, plus the Python / npm packages they need.
 # It never installs or stores an OpenAI key.
 #
 # Usage (from a clone):  bash install.sh [options]
-# Usage (no clone):      curl -fsSL https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/install.sh | bash -s -- [options]
+# Usage (no clone):      curl -fsSL https://raw.githubusercontent.com/tedchen0814/office-agent-skills/main/install.sh | bash -s -- [options]
 #
 # Options:
 #   --agent claude|codex|both     claude -> ~/.claude/skills (default); codex -> ~/.agents/skills
@@ -17,7 +17,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/tedchen0814/work-slide-skills.git"
+REPO_URL="https://github.com/tedchen0814/office-agent-skills.git"
 SKILLS=(html-slide-builder soil-html-deck soil-image-deck soil-teaching-deck draw file-toolkit)
 PY_PACKAGES=(openai pillow python-pptx python-docx openpyxl pypdf reportlab pymupdf "qrcode[pil]" "markitdown[pdf,docx,pptx,xlsx]")
 PPTXGENJS="pptxgenjs@3.12.0"
@@ -96,14 +96,14 @@ if [ "$CHECK_ONLY" = 1 ]; then
 fi
 
 # ---------------------------------------------------------------- 3. get the repo
-WORK="$(mktemp -d "${TMPDIR:-/tmp}/work-slide-skills.XXXXXX")"
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/office-agent-skills.XXXXXX")"
 trap 'rm -rf "$WORK"' EXIT
 BACKUP_ROOT="$HOME/.claude/skill-backups/$(date +%Y%m%d-%H%M%S)"
 
-say "Getting work-slide-skills"
+say "Getting office-agent-skills"
 if [ "$LOCAL_REPO" = 1 ]; then REPO="$HERE"; ok "using local copy: $REPO"
 else
-  REPO="$WORK/work-slide-skills"
+  REPO="$WORK/office-agent-skills"
   git -c core.longpaths=true clone --quiet --depth 1 "$REPO_URL" "$REPO"
   ok "cloned $REPO_URL"
 fi
