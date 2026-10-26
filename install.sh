@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # work-slide-skills one-step installer (macOS / Linux / Git Bash)
 #
-# Installs html-slide-builder, soil-html-deck, soil-image-deck, soil-teaching-deck and draw
+# Installs html-slide-builder, soil-html-deck, soil-image-deck, soil-teaching-deck, draw and file-toolkit
 # into the agent's skills folder, plus the Python / npm packages they need.
 # It never installs or stores an OpenAI key.
 #
@@ -18,8 +18,8 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/tedchen0814/work-slide-skills.git"
-SKILLS=(html-slide-builder soil-html-deck soil-image-deck soil-teaching-deck draw)
-PY_PACKAGES=(openai pillow python-pptx)
+SKILLS=(html-slide-builder soil-html-deck soil-image-deck soil-teaching-deck draw file-toolkit)
+PY_PACKAGES=(openai pillow python-pptx python-docx openpyxl pypdf reportlab pymupdf "qrcode[pil]" "markitdown[pdf,docx,pptx,xlsx]")
 PPTXGENJS="pptxgenjs@3.12.0"
 
 AGENT="claude"; SKILLS_DIR=""; FIREBASE_CFG=""; SKIP_DEPS=0; CHECK_ONLY=0
@@ -89,7 +89,7 @@ if [ "$CHECK_ONLY" = 1 ]; then
     fb="$t/html-slide-builder/references/firebase-config.md"
     if [ -f "$fb" ]; then if grep -q "YOUR_PROJECT_ID" "$fb"; then warn "Firebase not configured (live poll / word cloud slides will be skipped)"; else ok "Firebase configured"; fi; fi
   done
-  if [ -n "$PY" ]; then if "$PY" -c "import openai, PIL, pptx" 2>/dev/null; then ok "python packages"; else bad "python packages (${PY_PACKAGES[*]})"; fi; fi
+  if [ -n "$PY" ]; then if "$PY" -c "import openai, PIL, pptx, docx, openpyxl, pypdf, reportlab, pymupdf, qrcode, markitdown" 2>/dev/null; then ok "python packages"; else bad "python packages (${PY_PACKAGES[*]})"; fi; fi
   if has npm; then if npm ls -g pptxgenjs --depth=0 2>/dev/null | grep -q "pptxgenjs@"; then ok "pptxgenjs"; else bad "pptxgenjs (npm install -g $PPTXGENJS)"; fi; fi
   if key_ok; then ok "OpenAI key found (env or ~/.openai.env)"; else warn "no OPENAI_API_KEY yet: image generation will not work until you add one (see README)"; fi
   exit 0

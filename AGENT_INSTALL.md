@@ -4,8 +4,8 @@ Follow these steps when the user asks you to install this repo (for example: "in
 
 ## What gets installed
 
-- Skills `html-slide-builder`, `soil-html-deck`, `soil-image-deck`, `soil-teaching-deck`, `draw` (this repo), into the agent's skills folder
-- Python packages `openai`, `pillow`, `python-pptx`
+- Skills `html-slide-builder`, `soil-html-deck`, `soil-image-deck`, `soil-teaching-deck`, `draw`, `file-toolkit` (this repo), into the agent's skills folder
+- Python packages `openai`, `pillow`, `python-pptx`, `python-docx`, `openpyxl`, `pypdf`, `reportlab`, `pymupdf`, `qrcode[pil]`, `markitdown[pdf,docx,pptx,xlsx]` (`matplotlib` is deliberately not installed; install it only when a chart is needed)
 - npm global package `pptxgenjs@3.12.0` (only if Node.js is present)
 
 Existing skills with the same names are moved to `~/.claude/skill-backups/<timestamp>/`, not deleted. Nothing is written outside the skills folder, the backup folder, and the pip / npm package locations. **The installer never asks for, stores, or downloads an OpenAI key or a Firebase project.**

@@ -1,8 +1,8 @@
 # work-slide-skills
 
-把「工作簡報」變成 AI agent 一句話就能做的技能包：互動 HTML 簡報、可編輯 PPTX、整頁 AI 圖簡報，加上它們共用的生圖工具。給 Claude Code（或 Codex）使用，一鍵安裝。
+把「工作簡報」變成 AI agent 一句話就能做的技能包：互動 HTML 簡報、可編輯 PPTX、整頁 AI 圖簡報，加上它們共用的生圖工具，以及 Word／Excel／PDF 批次處理手冊。給 Claude Code（或 Codex）使用，一鍵安裝。
 
-## 內含 5 個 skill
+## 內含 6 個 skill
 
 | Skill                | 產出                                      | 什麼時候用                                |
 | -------------------- | --------------------------------------- | ------------------------------------ |
@@ -11,6 +11,7 @@
 | `soil-teaching-deck` | 文字可編輯的 `.pptx`（AI 插圖）                   | 只能給對方 PowerPoint、需要事後改字；內建簡報結構設計流程   |
 | `soil-image-deck`    | 每頁都是一張 AI 生成整圖的 `.pptx`                 | 視覺衝擊強、不需要改字（開場、社群、海報風）               |
 | `draw`               | 圖片（gpt-image-2）                         | 上面四個 skill 內部會呼叫它，也能單獨說「畫一張…」        |
+| `file-toolkit`       | Word／Excel／PDF／PPT 批次處理手冊                | 批次套印 Word 範本、Excel 依欄位拆檔、PDF 合併抽頁加浮水印與轉圖片、舊文件轉 Markdown、產生 QR Code |
 
 > 要做「會動的原理動畫」或「配音解說影片」，請改用 [rd-motion-deck](https://github.com/tedchen0814/rd-motion-deck)。
 
@@ -44,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/tedchen0814/work-slide-skills/main/
 
 | 項目 | 用途 | 沒有的話 |
 |---|---|---|
-| Python 3.9+ | 生圖與打包腳本 | 無法安裝 |
+| Python 3.9+ | 生圖、打包與文件處理腳本；會自動 pip 安裝 openai、Pillow、python-pptx、python-docx、openpyxl、pypdf、reportlab、PyMuPDF、qrcode、markitdown（畫圖表用的 matplotlib 不預裝，需要時 agent 再裝） | 無法安裝 |
 | Git | 下載 repo | 無法安裝 |
 | Node.js 22+ | `soil-teaching-deck` 產生 `.pptx`（PptxGenJS） | 該 skill 不能出 pptx，其他照常 |
 | GitHub CLI（`gh`，需已登入） | `html-slide-builder` 發布到 GitHub Pages | 簡報做得出來，但不能一鍵發布 |
@@ -83,6 +84,7 @@ OPENAI_API_KEY=sk-你的金鑰
 - 「做一份單檔網頁簡報，放這張 CSV 的圖表」→ `soil-html-deck`
 - 「做成可以改字的 PowerPoint」→ `soil-teaching-deck`
 - 「做一份整頁都是圖的簡報」→ `soil-image-deck`
+- 「把這份名單套進 Word 範本，每人一份」「把這幾個 PDF 合併並加浮水印」「這份舊 PDF 轉成文字」→ `file-toolkit`
 
 `html-slide-builder` 會先給你一張大綱表確認，確認後才開始生圖與部署，部署到 GitHub Pages 前也會先問你。
 

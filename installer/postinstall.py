@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-SKILLS = ["html-slide-builder", "soil-html-deck", "soil-image-deck", "soil-teaching-deck", "draw"]
+SKILLS = ["html-slide-builder", "soil-html-deck", "soil-image-deck", "soil-teaching-deck", "draw", "file-toolkit"]
 TEXT_EXT = {".md", ".py", ".json", ".txt", ".html", ".js"}
 FIREBASE_KEYS = {
     "apiKey": "YOUR_FIREBASE_API_KEY",

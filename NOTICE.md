@@ -12,5 +12,10 @@ Scope: this repository is for internal learning and knowledge sharing among coll
 
 ## Components downloaded at install time (not redistributed)
 
-- openai (Apache-2.0), Pillow (HPND), python-pptx (MIT) via pip
-- PptxGenJS (MIT) via npm
+- via pip: openai (Apache-2.0), Pillow (HPND), python-pptx (MIT), python-docx (MIT), openpyxl (MIT), pypdf (BSD-3-Clause), ReportLab (BSD), qrcode (BSD), markitdown (MIT)
+- via pip: PyMuPDF (**AGPL-3.0 or a commercial license**). It is downloaded onto each user's own machine and not redistributed by this repository, so internal use is fine; if you ever bundle it into a product you distribute, review the AGPL terms or use the commercial license.
+- via npm: PptxGenJS (MIT)
+
+## Original text
+
+`skills/file-toolkit` is original text written for this repository.

@@ -6,6 +6,7 @@
 #   soil-image-deck      every slide is one AI-generated image, packed into .pptx
 #   soil-teaching-deck   editable .pptx with AI illustrations (PptxGenJS)
 #   draw                 gpt-image-2 image generation helper used by the four above
+#   file-toolkit         how-to for Word / Excel / PowerPoint / PDF batch work, QR codes, file-to-Markdown
 # and the Python / npm packages they need. It never installs or stores an OpenAI key.
 #
 # Usage (from a clone):   powershell -ExecutionPolicy Bypass -File .\install.ps1 [options]
@@ -32,8 +33,8 @@ param(
 $ErrorActionPreference = "Stop"
 
 $RepoUrl    = "https://github.com/tedchen0814/work-slide-skills.git"
-$Skills     = @("html-slide-builder", "soil-html-deck", "soil-image-deck", "soil-teaching-deck", "draw")
-$PyPackages = @("openai", "pillow", "python-pptx")
+$Skills     = @("html-slide-builder", "soil-html-deck", "soil-image-deck", "soil-teaching-deck", "draw", "file-toolkit")
+$PyPackages = @("openai", "pillow", "python-pptx", "python-docx", "openpyxl", "pypdf", "reportlab", "pymupdf", "qrcode[pil]", "markitdown[pdf,docx,pptx,xlsx]")
 $PptxGenJs  = "pptxgenjs@3.12.0"
 
 function Say($msg)  { Write-Host "==> $msg" -ForegroundColor Cyan }
@@ -103,7 +104,7 @@ if ($CheckOnly) {
   }
   if ($py) {
     $a = @(); if ($py.Count -gt 1) { $a += $py[1..($py.Count - 1)] }
-    & $py[0] @a -c "import openai, PIL, pptx" 2>$null
+    & $py[0] @a -c "import openai, PIL, pptx, docx, openpyxl, pypdf, reportlab, pymupdf, qrcode, markitdown" 2>$null
     if ($LASTEXITCODE -eq 0) { Ok "python packages" } else { Bad "python packages ($($PyPackages -join ', '))" }
   }
   if (Has "npm") { $g = (& npm ls -g pptxgenjs --depth=0 2>$null) -join ' '; if ($g -match "pptxgenjs@") { Ok "pptxgenjs" } else { Bad "pptxgenjs (npm install -g $PptxGenJs)" } }
