@@ -76,6 +76,28 @@ OPENAI_API_KEY=sk-你的金鑰
 
 沒設定 Firebase 時，`html-slide-builder` 會自動不放互動頁，不會出錯。
 
+## 安裝的套件與用途
+
+安裝腳本會替你裝下面這些套件，全部是你的 agent 在背後呼叫的工具，你不需要自己學，只要用說的描述需求。
+
+| 套件 | 用途（白話） | 常見的一句話需求 |
+|---|---|---|
+| `openai` | 呼叫 OpenAI 生圖（`draw` 使用） | 「畫一張封面圖」 |
+| `Pillow` | 圖片裁切、縮放、去背、格式轉換 | 「把這些圖片統一縮成 800 像素寬」 |
+| `python-pptx` | 讀寫 PowerPoint（`.pptx`）：產生投影片、改字型、插圖 | 「把每張圖做成一頁投影片」「全部字型改成微軟正黑體」 |
+| `python-docx` | 讀寫 Word（`.docx`）：套印範本、批次產生文件 | 「用這份名單套進通知單範本，每人一份」 |
+| `openpyxl` | 讀寫 Excel（`.xlsx`）：計算、標色、依欄位拆成多個檔案 | 「依部門欄位把總表拆成一個部門一個檔」 |
+| `pypdf` | PDF 合併、拆分、抽頁、疊浮水印 | 「合併這 3 份 PDF，只留第 5～8 頁」 |
+| `reportlab` | 產生 PDF 內容，主要用來畫浮水印、簽名頁 | 「每頁加上『僅供內部使用』浮水印」 |
+| `PyMuPDF` | PDF 轉圖片、取出文字與圖片、擷取頁面 | 「把這份 PDF 第 12 頁轉成圖，貼進簡報」 |
+| `qrcode[pil]` | 把網址轉成 QR Code 圖片 | 「把簡報連結做成 QR Code 放在結尾頁」 |
+| `markitdown` | 把 PDF／Word／PowerPoint／Excel 轉成乾淨的 Markdown，方便餵給 AI 讀 | 「把這份舊簡報轉成文字，我要重新整理」 |
+| `pptxgenjs`（npm，需 Node.js） | 另一套產生 `.pptx` 的工具，`soil-teaching-deck` 用它排版 | 「做成可以改字的 PowerPoint」 |
+
+**刻意沒預裝**：`matplotlib`（畫圖表，體積大）、`ocrmypdf`＋Tesseract（掃描檔轉可選取文字，需要系統層級安裝）、`docx2pdf`（Word 轉 PDF，需要本機有 Word）。真的需要時，agent 會先告訴你再臨時安裝。
+
+> `PyMuPDF` 採 AGPL／商業雙授權：每個人在自己電腦上下載使用沒有問題，細節見 [NOTICE.md](NOTICE.md)。
+
 ## 怎麼用
 
 直接用說的，agent 會挑對的 skill：
