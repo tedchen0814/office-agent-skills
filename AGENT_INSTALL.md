@@ -12,11 +12,7 @@ Existing skills with the same names are moved to `~/.claude/skill-backups/<times
 
 ## Steps
 
-1. **Pick the agent and the scope.**
-   - Agent: Claude Code → default (`~/.claude/skills`). Codex → add `-Agent codex` / `--agent codex`. If unsure, ask the user.
-   - **Scope — always ask the user, in their language, before installing.** Tell them: this installs 6 skills; in the global folder, every conversation in every project loads all their names and descriptions, which costs context even in projects that never make decks or documents. Then ask: "Install globally, or only for one project?"
-     - Only for one project (Claude Code only): get the project folder and add `-Scope project -ProjectPath "<folder>"` / `--scope project --project-path "<folder>"`.
-     - Globally (default): continue as is. Codex always installs globally for now.
+1. **Pick the skills folder.** Claude Code → default (`~/.claude/skills`). Codex → add `-Agent codex` / `--agent codex`. If unsure, ask the user.
 
 2. **Check first, change nothing.**
    - Windows (PowerShell):
@@ -36,7 +32,7 @@ Existing skills with the same names are moved to `~/.claude/skill-backups/<times
 
 6. **OpenAI key.** The report ends with whether a key was found. If not, tell the user image generation needs their own key, and show them the two steps from the README (create `~/.openai.env` with `OPENAI_API_KEY=...`; complete Individual verification). Do not ask them to paste the key into the chat; let them create the file themselves.
 
-7. **Report** the "Environment check" section: every skill should show `[ok]`. Then tell the user to **restart the agent** so the new skills load. If they chose project scope, tell them to open the agent in that project folder, and offer to add `.claude/` to that project's `.git/info/exclude` if it is a public git repo. If they installed globally, mention once that the skills can later be moved to a project's `.claude/skills/`. Give one example:
+7. **Report** the "Environment check" section: every skill should show `[ok]`. Then tell the user to **restart the agent** so the new skills load, and give one example:
    ```text
    把這份大綱做成互動 HTML 簡報：<貼上大綱>
    ```

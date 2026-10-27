@@ -39,11 +39,6 @@ curl -fsSL https://raw.githubusercontent.com/tedchen0814/office-agent-skills/mai
 
 常用選項：`-Agent codex`（`--agent codex`）裝到 Codex；`-CheckOnly`（`--check-only`）只檢查不改動；`-InstallPrereqs` 用 winget 補裝 Git、Python；`-FirebaseConfigFile`（`--firebase-config`）直接帶入你的 Firebase 設定（見下）。
 
-> **安裝前請先想一下：要裝全域，還是只裝在某個專案？**
-> 這個安裝包會裝 6 個 skill。裝在全域的話，**每個專案的每個對話**開頭都會載入它們的名稱與說明，占用上下文，即使那個專案根本不做簡報或文件。
-> 只在特定專案用的話，加上 `-Scope project -ProjectPath <專案資料夾>`（Bash：`--scope project --project-path <專案資料夾>`），只裝到該專案的 `.claude/skills/`，開啟那個專案時才載入。專案層目前只支援 Claude Code；Python／npm 套件仍是整台電腦共用；專案若是公開 git repo，請把 `.claude/` 加進 `.git/info/exclude`。
-> 已經裝成全域也沒關係：把這 6 個資料夾搬到專案的 `.claude/skills/` 即可。
-
 安裝完**重新啟動 agent**，新 skill 才會載入。已存在的同名 skill 會被搬到 `~/.claude/skill-backups/`，不會直接刪除。
 
 ## 需要什麼

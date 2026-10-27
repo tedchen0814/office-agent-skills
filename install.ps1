@@ -14,12 +14,7 @@
 #
 # Options:
 #   -Agent claude|codex|both    claude -> ~\.claude\skills (default); codex -> ~\.agents\skills
-#   -Scope user|project         user (default): global skills folder, loaded in every project.
-#                               project: only into <ProjectPath>\.claude\skills, loaded only when that project is open
-#                               (Claude Code only). Every installed skill adds to the skill list loaded at the start of
-#                               each conversation, so project scope keeps other projects lighter.
-#   -ProjectPath <dir>          project folder for -Scope project (default: the current folder)
-#   -SkillsDir <path>           install into this folder instead (overrides -Agent and -Scope)
+#   -SkillsDir <path>           install into this folder instead (overrides -Agent)
 #   -FirebaseConfigFile <file>  text file containing your firebaseConfig = {...}; fills html-slide-builder
 #   -InstallPrereqs             install missing Git / Python / Node.js with winget
 #   -SkipDeps                   do not run pip / npm
@@ -28,8 +23,6 @@
 [CmdletBinding()]
 param(
   [ValidateSet("claude", "codex", "both")] [string]$Agent = "claude",
-  [ValidateSet("user", "project")] [string]$Scope = "user",
-  [string]$ProjectPath = "",
   [string]$SkillsDir = "",
   [string]$FirebaseConfigFile = "",
   [switch]$InstallPrereqs,
@@ -95,32 +88,9 @@ if ($missing.Count -gt 0 -and -not $CheckOnly) {
 # ---------------------------------------------------------------- 2. target folders
 $targets = @()
 if ($SkillsDir) { $targets += $SkillsDir }
-elseif ($Scope -eq "project") {
-  if ($Agent -ne "claude") {
-    Write-Host "-Scope project currently supports Claude Code only (-Agent claude). Use the default -Scope user for Codex." -ForegroundColor Red
-    exit 2
-  }
-  if (-not $ProjectPath) { $ProjectPath = (Get-Location).Path }
-  if (-not (Test-Path -LiteralPath $ProjectPath -PathType Container)) {
-    Write-Host "-ProjectPath not found: $ProjectPath" -ForegroundColor Red
-    exit 2
-  }
-  $targets += (Join-Path (Resolve-Path -LiteralPath $ProjectPath).Path ".claude\skills")
-}
 else {
   if ($Agent -in @("claude", "both")) { $targets += (Join-Path $HOME ".claude\skills") }
   if ($Agent -in @("codex", "both"))  { $targets += (Join-Path $HOME ".agents\skills") }
-}
-
-$globalInstall = (-not $SkillsDir) -and ($Scope -eq "user")
-$projectInstall = (-not $SkillsDir) -and ($Scope -eq "project")
-if (-not $CheckOnly) {
-  if ($globalInstall) {
-    Warn "$($Skills.Count) skills will go into the GLOBAL skills folder, so every conversation in every project loads their names and descriptions."
-    Warn "If you only need them in one project, stop and rerun with: -Scope project -ProjectPath <project folder>"
-  } elseif ($projectInstall) {
-    Say "Project scope: $($Skills.Count) skills -> $($targets[0])"
-  }
 }
 
 if ($CheckOnly) {
@@ -206,18 +176,6 @@ try {
     Write-Host "         and complete Individual verification at platform.openai.com/settings/organization/general"
   }
   Write-Host ""
-  if ($globalInstall) {
-    Write-Host "Reminder: $($Skills.Count) skills are now global and load in every conversation."
-    Write-Host "To limit them to one project, move these folders to <project>\.claude\skills,"
-    Write-Host "or rerun this installer with -Scope project -ProjectPath <project folder>."
-    Write-Host ""
-  } elseif ($projectInstall) {
-    Write-Host "Installed for this project only: $($targets[0])"
-    Write-Host "Open your agent in that project folder to use these skills; other projects are not affected."
-    Write-Host "If that project is a public git repo, add '.claude/' to its .git/info/exclude so the skill files are not pushed."
-    Write-Host "(Python / npm packages are installed machine-wide either way.)"
-    Write-Host ""
-  }
   Write-Host "Done. Restart your agent (Claude Code / Codex) so it loads the new skills, then try:" -ForegroundColor Green
   Write-Host "  describe the deck you want, e.g. 'make an interactive HTML deck from this outline' (html-slide-builder)"
 } finally {
