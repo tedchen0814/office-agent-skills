@@ -10,7 +10,12 @@
 #
 # Options:
 #   --agent claude|codex|both     claude -> ~/.claude/skills (default); codex -> ~/.agents/skills
-#   --skills-dir <path>           install into this folder instead (overrides --agent)
+#   --scope user|project          user (default): global skills folder, loaded in every project.
+#                                 project: only into <project-path>/.claude/skills, loaded only when that project is open
+#                                 (Claude Code only). Every installed skill adds to the skill list loaded at the start of
+#                                 each conversation, so project scope keeps other projects lighter.
+#   --project-path <dir>          project folder for --scope project (default: the current folder)
+#   --skills-dir <path>           install into this folder instead (overrides --agent and --scope)
 #   --firebase-config <file>      text file containing your firebaseConfig = {...}
 #   --skip-deps                   do not run pip / npm
 #   --check-only                  only report what is installed; change nothing
@@ -22,10 +27,12 @@ SKILLS=(html-slide-builder soil-html-deck soil-image-deck soil-teaching-deck dra
 PY_PACKAGES=(openai pillow python-pptx python-docx openpyxl pypdf reportlab pymupdf "qrcode[pil]" "markitdown[pdf,docx,pptx,xlsx]")
 PPTXGENJS="pptxgenjs@3.12.0"
 
-AGENT="claude"; SKILLS_DIR=""; FIREBASE_CFG=""; SKIP_DEPS=0; CHECK_ONLY=0
+AGENT="claude"; SCOPE="user"; PROJECT_PATH=""; SKILLS_DIR=""; FIREBASE_CFG=""; SKIP_DEPS=0; CHECK_ONLY=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --agent) AGENT="$2"; shift 2 ;;
+    --scope) SCOPE="$2"; shift 2 ;;
+    --project-path) PROJECT_PATH="$2"; shift 2 ;;
     --skills-dir) SKILLS_DIR="$2"; shift 2 ;;
     --firebase-config) FIREBASE_CFG="$2"; shift 2 ;;
     --skip-deps) SKIP_DEPS=1; shift ;;
@@ -70,14 +77,35 @@ fi
 
 # ---------------------------------------------------------------- 2. target folders
 TARGETS=()
+GLOBAL_INSTALL=0; PROJECT_INSTALL=0
 if [ -n "$SKILLS_DIR" ]; then TARGETS+=("$SKILLS_DIR")
 else
-  case "$AGENT" in
-    claude) TARGETS+=("$HOME/.claude/skills") ;;
-    codex)  TARGETS+=("$HOME/.agents/skills") ;;
-    both)   TARGETS+=("$HOME/.claude/skills" "$HOME/.agents/skills") ;;
-    *) echo "--agent must be claude, codex or both" >&2; exit 2 ;;
+  case "$SCOPE" in
+    user)
+      GLOBAL_INSTALL=1
+      case "$AGENT" in
+        claude) TARGETS+=("$HOME/.claude/skills") ;;
+        codex)  TARGETS+=("$HOME/.agents/skills") ;;
+        both)   TARGETS+=("$HOME/.claude/skills" "$HOME/.agents/skills") ;;
+        *) echo "--agent must be claude, codex or both" >&2; exit 2 ;;
+      esac ;;
+    project)
+      PROJECT_INSTALL=1
+      [ "$AGENT" = claude ] || { echo "--scope project currently supports Claude Code only (--agent claude). Use the default --scope user for Codex." >&2; exit 2; }
+      [ -n "$PROJECT_PATH" ] || PROJECT_PATH="$PWD"
+      [ -d "$PROJECT_PATH" ] || { echo "--project-path not found: $PROJECT_PATH" >&2; exit 2; }
+      TARGETS+=("$(cd "$PROJECT_PATH" && pwd)/.claude/skills") ;;
+    *) echo "--scope must be user or project" >&2; exit 2 ;;
   esac
+fi
+
+if [ "$CHECK_ONLY" = 0 ]; then
+  if [ "$GLOBAL_INSTALL" = 1 ]; then
+    warn "${#SKILLS[@]} skills will go into the GLOBAL skills folder, so every conversation in every project loads their names and descriptions."
+    warn "If you only need them in one project, stop and rerun with: --scope project --project-path <project folder>"
+  elif [ "$PROJECT_INSTALL" = 1 ]; then
+    say "Project scope: ${#SKILLS[@]} skills -> ${TARGETS[0]}"
+  fi
 fi
 
 key_ok() { [ -n "${OPENAI_API_KEY:-}" ] || [ -f "$HOME/.openai.env" ]; }
@@ -146,4 +174,16 @@ if key_ok; then ok "OpenAI key found"; else
   echo "         and complete Individual verification at platform.openai.com/settings/organization/general"
 fi
 echo
+if [ "$GLOBAL_INSTALL" = 1 ]; then
+  echo "Reminder: ${#SKILLS[@]} skills are now global and load in every conversation."
+  echo "To limit them to one project, move these folders to <project>/.claude/skills,"
+  echo "or rerun this installer with --scope project --project-path <project folder>."
+  echo
+elif [ "$PROJECT_INSTALL" = 1 ]; then
+  echo "Installed for this project only: ${TARGETS[0]}"
+  echo "Open your agent in that project folder to use these skills; other projects are not affected."
+  echo "If that project is a public git repo, add '.claude/' to its .git/info/exclude so the skill files are not pushed."
+  echo "(Python / npm packages are installed machine-wide either way.)"
+  echo
+fi
 printf '\033[32mDone. Restart your agent (Claude Code / Codex) so it loads the new skills.\033[0m\n'
