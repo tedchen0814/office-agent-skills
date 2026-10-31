@@ -1311,3 +1311,15 @@ npm install -g pptxgenjs
 | 相似三角形 | `{"type":"similar_triangles","config":{"triangle1":{"vertex_labels":["A","B","C"],"angle_arcs":{"A":1,"B":2}},"triangle2":{"vertex_labels":["D","E","F"],"angle_arcs":{"D":1,"E":2}}}}` |
 | 一次函數 | `{"type":"coordinate_plane","config":{"x_range":[-3,5],"y_range":[-4,8],"lines":[{"slope":2,"intercept":-1,"label":"y=2x-1"}]}}` |
 | 拋物線 | `{"type":"coordinate_plane","config":{"x_range":[-2,5],"y_range":[-5,6],"parabolas":[{"a":1,"b":-2,"c":-3,"label":"y=x²-2x-3"}]}}` |
+
+---
+
+## 進階：公司範本＋大量文字頁（排版、補圖、目錄跳轉）
+
+使用者提供公司 `.pptx` 範本、或要把幾十頁的大綱做成可編輯簡報時，改用 `scripts/template_deck_lib.py`（python-pptx 套用範本母片），並照 `references/template-deck.md` 做三件事：
+
+1. **文字排版**：每頁自動試算字級，優先讓每條文字一行寫完、不換行，其次取最大字級。
+2. **空白處補圖**：內容下方空白夠大的頁，右下角補一張與該頁主題相關的 AI 線稿（用 `draw`，風格統一、不含文字）。
+3. **目錄跳轉**：目錄表格的區段代碼放透明矩形，設 `click_action.target_slide`，點擊跳到該區第一頁。
+
+完成後一定用 PowerPoint 匯出圖逐批檢查（估算寬度不等於實際換行）。
